@@ -3,13 +3,15 @@ from django.urls import path, include,re_path
 from rest_framework.routers import DefaultRouter
 from rest_framework import permissions
 
-from blog.views import BlogViewSet
+from blog.views import BlogViewSet,PostViewSet,SubscriptionViewSet
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 router = DefaultRouter()
 router.register(r'blogs',BlogViewSet)
+router.register(r'posts', PostViewSet)
+router.register(r'subscriptions', SubscriptionViewSet)
 
 schema_view = get_schema_view(
    openapi.Info(
