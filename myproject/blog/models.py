@@ -26,3 +26,14 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+class Subscription(models.Model):
+    subscriber = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='following')
+    blog = models.ForeignKey('Blog', on_delete=models.CASCADE, related_name='followers')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('subscriber', 'blog')
+
+    def __str__(self):
+        return f'{self.subscriber.username} -> {self.blog.owner.username}'
