@@ -1,3 +1,23 @@
 from django.db import models
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
 
-# Create your models here.
+class Blog(models.Model):
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog')
+    title = models.CharField(max_length=255, default="My Personal Blog")
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.title} by {self.owner.username}"
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_user_blog(sender, instance, created, **kwargs):
+    if created:
+        Blog.objects.create(owner=instance)
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def delete_user_blog(sender, instance, **kwargs):
+    if instance.is_deleted:
+        instance.blog.delete()
