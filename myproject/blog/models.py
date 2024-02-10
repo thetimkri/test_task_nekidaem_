@@ -17,7 +17,3 @@ def create_user_blog(sender, instance, created, **kwargs):
     if created:
         Blog.objects.create(owner=instance)
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def delete_user_blog(sender, instance, **kwargs):
-    if instance.is_deleted:
-        instance.blog.delete()
